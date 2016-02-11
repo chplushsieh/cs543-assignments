@@ -15,11 +15,15 @@ full_path = sprintf('%s%s/', root_path, subject_name);
 image_size = size(ambient_image);
 
 
-%% preprocess the data: 
+%% preprocess the data:
 %% subtract ambient_image from each image in imarray
+imarray = bsxfun(@minus, imarray, ambient_image);
+
 %% make sure no pixel is less than zero
+imarray(imarray<0) = 0;
+
 %% rescale values in imarray to be between 0 and 1
-%% <<< fill in your preprocessing code here >>>
+imarray = (imarray - min2(imarray)) / (max2(imarray) - min2(imarray));
 
 %% get albedo and surface normals (you need to fill in photometric_stereo)
 [albedo_image, surface_normals] = photometric_stereo(imarray, light_dirs);
@@ -39,6 +43,5 @@ if save_flag
     imwrite(surface_normals, sprintf('%s_normals_color.jpg', subject_name), 'jpg');
     imwrite(surface_normals(:,:,1), sprintf('%s_normals_x.jpg', subject_name), 'jpg');
     imwrite(surface_normals(:,:,2), sprintf('%s_normals_y.jpg', subject_name), 'jpg');
-    imwrite(surface_normals(:,:,3), sprintf('%s_normals_z.jpg', subject_name), 'jpg');    
+    imwrite(surface_normals(:,:,3), sprintf('%s_normals_z.jpg', subject_name), 'jpg');
 end
-
