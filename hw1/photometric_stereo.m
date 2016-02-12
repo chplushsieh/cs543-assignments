@@ -23,6 +23,5 @@ gy = g(:, :, 2);
 gz = g(:, :, 3);
 albedo_image = sqrt(gx.^2 + gy.^2 + gz.^2);
 
-surface_normals = g./albedo_image;
-
+surface_normals = bsxfun(@rdivide, g, albedo_image);
 end

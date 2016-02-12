@@ -5,7 +5,7 @@
 root_path = 'croppedyale/';
 subject_name = 'yaleB01';
 
-integration_method = 'average'; % 'column', 'row', 'average', 'random'
+integration_method = 'all'; % 'column', 'row', 'average', 'random'
 
 save_flag = 0; % whether to save output images
 
@@ -23,7 +23,10 @@ imarray = bsxfun(@minus, imarray, ambient_image);
 imarray(imarray<0) = 0;
 
 %% rescale values in imarray to be between 0 and 1
-imarray = (imarray - min2(imarray)) / (max2(imarray) - min2(imarray));
+mmin = min(imarray(:));
+mmax = max(imarray(:));
+imarray = (imarray - mmin) ./ (mmax-mmin);
+
 
 %% get albedo and surface normals (you need to fill in photometric_stereo)
 [albedo_image, surface_normals] = photometric_stereo(imarray, light_dirs);

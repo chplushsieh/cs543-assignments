@@ -5,48 +5,93 @@ function  height_map = get_surface(surface_normals, image_size, method)
 
 
 %% <<< fill in your code below >>>
-sur2d = surface_normals(:, :, 1:2);
+h = image_size(:,1);
+w = image_size(:,2);
+height_map = zeros(h, w);
+
+along_y = surface_normals(:, :, 1);
+along_x = surface_normals(:, :, 2);
+
+along_y = along_y ./ surface_normals(:, :, 3);
+along_x = along_x ./ surface_normals(:, :, 3);
 
     switch method
         case 'column'
-          height_map = cumsum(sur2d);
-          height_map = cumsum(height_map, 2);
+          for x=1:h-1
+            height_map(x+1, 1) = height_map(x, 1) + along_x(x+1, 1);
+          end
+         
+          for x=1:h
+              for y=1:w-1
+                height_map(x, y+1) = height_map(x, y) + along_y(x, y+1);
+              end
+          end
+
         case 'row'
-          height_map = cumsum(sur2d, 2);
-          height_map = cumsum(height_map);
+          for y=1:w-1
+            height_map(1, y+1) = height_map(1, y) + along_y(1, y+1);
+          end
+         
+          for y=1:w
+              for x=1:h-1
+                height_map(x+1, y) = height_map(x, y) + along_x(x+1, y);
+              end
+          end
         case 'average'
           col_h_map = get_surface(surface_normals, image_size, 'column');
           row_h_map = get_surface(surface_normals, image_size, 'row');
 
-          height_map = bsxfun(@plus, col_h_map, col_h_map);
+          height_map = bsxfun(@plus, col_h_map, row_h_map);
           height_map = height_map ./ 2;
         case 'random'
-          height_map = zeros(size(surface_normals));
-          for row = 1:size(height_map, 1)
-            for col = 1:size(height_map, 2)
-              height_map(row, col) = random_path(row, col, surface_normals);
-            end
-          end
+          height_map = n_random_path(5, image_size, along_x, along_y);
+        case 'all'
+          for x=1:h-1
+             for y=1:w-1
+                 height_map(x,y+1) = height_map(x,y) + along_y(x,y+1);
+                 height_map(x+1,y) = height_map(x,y) + along_x(x+1,y);
+             end
+          end            
     end
 
 end
 
-function height = random_path(row, col, surface_normals)
-  height = 0;
-
-  while( row >= 1 | col >= 1 )
-    height = height + surface_normals(i, j);
-    if row > 1 & col > 1
-      if (rand >= 0.5 & row > 1)
-        row = row - 1;
-      else
-        col = col - 1;
-      end
-    elseif ~(row > 1)
-      col = col - 1;
-    else% ~(col > 1) or row==1 & col==1
-      row = row - 1;
+function  height_map = n_random_path(n, image_size, along_x, along_y)
+    h = image_size(:,1);
+    w = image_size(:,2);
+    height_map = zeros(h, w);    
+    for  i = 1:n
+        r_h_map = random_path(image_size, along_x, along_y);
+        height_map = bsxfun(@plus, height_map, r_h_map);
     end
-  end
-  
+    height_map = height_map ./ n;
+end
+
+function  height_map = random_path(image_size, along_x, along_y)
+    h = image_size(:,1);
+    w = image_size(:,2);
+    height_map = zeros(h, w); 
+    
+    for x=1:h
+        for y=1:w
+            height_map(x,y) = walk(x, y, along_x, along_y);
+        end
+    end  
+
+end
+
+function  height = walk(x, y, along_x, along_y)
+    if x == 1 && y == 1
+        height = 0;
+    elseif x == 1 && ~(y == 1)
+        height = along_y(x, y) + walk(x, y-1, along_x, along_y);
+    elseif ~(x == 1) && y == 1
+        height = along_x(x, y) + walk(x-1, y, along_x, along_y);
+    else
+        if rand >= 0.5
+            height = along_x(x, y) + walk(x-1, y, along_x, along_y);
+        else
+            height = along_y(x, y) + walk(x, y-1, along_x, along_y);
+        end
+    end
 end
