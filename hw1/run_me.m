@@ -3,11 +3,11 @@
 
 % path to the folder and subfolder
 root_path = 'croppedyale/';
-subject_name = 'yaleB01';
+subject_name = 'yaleB07';
 
-integration_method = 'all'; % 'column', 'row', 'average', 'random'
+integration_method = 'random'; % 'column', 'row', 'average', 'random'
 
-save_flag = 0; % whether to save output images
+save_flag = 1; % whether to save output images
 
 %% load images
 full_path = sprintf('%s%s/', root_path, subject_name);
@@ -31,8 +31,10 @@ imarray = (imarray - mmin) ./ (mmax-mmin);
 %% get albedo and surface normals (you need to fill in photometric_stereo)
 [albedo_image, surface_normals] = photometric_stereo(imarray, light_dirs);
 
+tic;
 %% reconstruct height map (you need to fill in get_surface for different integration methods)
 height_map = get_surface(surface_normals, image_size, integration_method);
+toc;
 
 %% display albedo and surface
 display_output(albedo_image, height_map);
