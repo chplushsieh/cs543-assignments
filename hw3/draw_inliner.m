@@ -1,6 +1,8 @@
 function draw_inliner(img_left, img_right, top_pairs, homography)
 
-[~, r_left, c_left] = compute_num_of_inliners(top_pairs, homography);
+[~, inliner_pairs] = compute_num_of_inliners(top_pairs, homography);
+r_left = inliner_pairs(:, 1);
+c_left = inliner_pairs(:, 2);
 
 figure, imagesc(img_left), axis image, colormap(gray), hold on
 plot(c_left, r_left,'gs'), title('inliners');

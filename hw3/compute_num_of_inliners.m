@@ -1,4 +1,4 @@
-function [cur_inliner, r_left, c_left] = compute_num_of_inliners(top_pairs, homography)
+function [cur_inliner, inliner_pairs] = compute_num_of_inliners(top_pairs, homography)
     threshold = 10; % TODO
     
     cur_inliner = 0;
@@ -23,13 +23,4 @@ function [cur_inliner, r_left, c_left] = compute_num_of_inliners(top_pairs, homo
     end
     
     inliner_pairs = top_pairs(is_inliner == true, :);
-    if isempty(inliner_pairs)
-        r_left=0;
-        c_left=0;
-    else
-        r_left = inliner_pairs(:, 1);
-        c_left = inliner_pairs(:, 2);
-    end
-
-    
 end

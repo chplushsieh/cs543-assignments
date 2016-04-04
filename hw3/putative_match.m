@@ -1,4 +1,5 @@
 function top_pairs = putative_match(corners_distance, r_left, c_left, r_right, c_right)
+% Select the top few hundred descriptor pairs with the smallest pairwise distances
 
 % set top matches number
 top = 200;

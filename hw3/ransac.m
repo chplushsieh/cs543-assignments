@@ -1,7 +1,7 @@
 function homography = ransac(top_pairs)
 
 % set how many time 
-round = 200;
+round = 1400;
 
 max_inliner = 0;
 homography = eye(3);
@@ -25,7 +25,7 @@ while(round > 0)
         cur_homography = eye(3);
     end
     
-    [cur_inliner, ~, ~, ] = compute_num_of_inliners(top_pairs, cur_homography);
+    [cur_inliner, ~] = compute_num_of_inliners(top_pairs, cur_homography);
     
     if cur_inliner > max_inliner
         display(max_inliner)
