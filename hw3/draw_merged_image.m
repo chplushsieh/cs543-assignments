@@ -1,4 +1,4 @@
-function draw_merged_image(img_left, img_right, T)
+function draw_merged_image(img_left, img_right, T, savedir)
 
 % draw merged image
 im2 = img_left;
@@ -13,6 +13,6 @@ im2t=imtransform(im2,T,'XData',xdataout,'YData',ydataout);
 im1t=imtransform(im1,maketform('affine',eye(3)),'XData',xdataout,'YData',ydataout);
 
 ims=im1t/2+im2t/2;
-figure, imshow(ims);
-
+c = figure, imshow(ims);
+saveas(c, [savedir 'merged.png'],'png');
 end

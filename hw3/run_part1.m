@@ -3,11 +3,10 @@ close all;
 clearvars;
 
 % set saved file path
-savedir = './outputs/';
+savedir = './part1outputs/';
 if ~exist(savedir, 'dir')
     mkdir(savedir)
 end
-savepath = [savedir, 'output', '.png'];
 
 % read and preprocess input images
 raw_left = imread('./images/uttower_left.jpg');
@@ -35,7 +34,7 @@ homography = ransac_part1(top_pairs);
 % draw_inliner(img_left, img_right, top_pairs, T.tdata.T);
 % draw_merged_image(img_left, img_right, T);
 
-draw_inliner(img_left, img_right, top_pairs, homography);
+draw_inliner(img_left, img_right, top_pairs, homography, savedir);
 
 T = maketform('projective', homography);
-draw_merged_image(img_left, img_right, T);
+draw_merged_image(img_left, img_right, T, savedir);
