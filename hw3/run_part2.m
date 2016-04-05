@@ -13,8 +13,8 @@ is_putative_match = 1; % set to 0 to use ground truth matches
 
 datadir = './assignment3_part2_data/';
 
-% image_name = 'house';
-image_name = 'library';
+image_name = 'house';
+% image_name = 'library';
 
 %%
 %% load images and match files for the first example
