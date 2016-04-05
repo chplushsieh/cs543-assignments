@@ -2,15 +2,26 @@
 close all;
 clearvars;
 
+% set saved file path
+savedir = './part2outputs/';
+if ~exist(savedir, 'dir')
+    mkdir(savedir)
+end
+
 is_normalized = 1;
 is_putative_match = 1; % set to 0 to use ground truth matches
+
+datadir = './assignment3_part2_data/';
+
+% image_name = 'house';
+image_name = 'library';
 
 %%
 %% load images and match files for the first example
 %%
 
-I1 = imread('./assignment3_part2_data/house1.jpg');
-I2 = imread('./assignment3_part2_data/house2.jpg');
+I1 = imread([datadir image_name '1.jpg']);
+I2 = imread([datadir image_name '2.jpg']);
 
 if is_putative_match
     img_left = im2double(rgb2gray(I1));
@@ -25,7 +36,7 @@ if is_putative_match
     matches(:, 3) = top_pairs(:, 4);
     matches(:, 4) = top_pairs(:, 3);
 else
-    matches = load('./assignment3_part2_data/house_matches.txt');
+    matches = load([datadir image_name '_matches.txt']);
 end
 % this is a N x 4 file where the first two numbers of each row
 % are coordinates of corners in the first image and the last two
@@ -72,20 +83,20 @@ L = get_epipolar_line(F, matches);
 
 [closest_pt, L] = get_closest_pt(L, matches);
 
-display_residual(closest_pt, L, matches, I2);
+display_residual(closest_pt, L, matches, I2, savedir, image_name);
 
 %%
 %% Display the two camera centers and reconstructed points in 3D
 %% 
 
-P1 = load('./assignment3_part2_data/house1_camera.txt');
-P2 = load('./assignment3_part2_data/house2_camera.txt');
+P1 = load([datadir image_name '1_camera.txt']);
+P2 = load([datadir image_name '2_camera.txt']);
 
 x1 = transpose(matches(:, 1:2));
 x2 = transpose(matches(:, 3:4));
 x_world = triangulate(x1, x2, P1, P2);
 
-figure; axis equal; hold on;
+c = figure; axis equal; hold on;
 plot3(x_world(2, :), x_world(1, :), x_world(3, :), 'o');
 
 R1 = P1(:, 1:3);
@@ -98,3 +109,5 @@ center1 = -inv(R1) * t1;
 center2 = -inv(R2) * t2;
 plot3(center1(2), center1(1), center1(3), 'rx');
 plot3(center2(2), center2(1), center2(3), 'gx');
+
+saveas(c, [savedir image_name '_3d.png'],'png');
