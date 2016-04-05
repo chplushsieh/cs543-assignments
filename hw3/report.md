@@ -73,12 +73,14 @@
         Here are the result: 
         ![merged]
         ```Matlab
-        % For house without ground truth matches:
-        num_inliner = 
-        avg_residual = 
+        % For library without ground truth matches:
+        num_inliner = 127
+        avg_residual = 2.3817
         ```
         Here are the result: 
         ![merged]
+
+        [merged]: https://raw.githubusercontent.com/chplushsieh/cs543-assignments/master/hw3/part2outputs/tagged/library_without_groundtruth_result.png
    3. For both image pairs, visualize 3D camera centers and triangulated 3D points.
         
         See Youtube video here for house:
