@@ -3,7 +3,7 @@ close all;
 clearvars;
 
 is_normalized = 1;
-is_putative_match = 0; % set to 0 to use ground truth matches
+is_putative_match = 1; % set to 0 to use ground truth matches
 
 %%
 %% load images and match files for the first example
@@ -12,7 +12,21 @@ is_putative_match = 0; % set to 0 to use ground truth matches
 I1 = imread('./assignment3_part2_data/house1.jpg');
 I2 = imread('./assignment3_part2_data/house2.jpg');
 
-matches = load('./assignment3_part2_data/house_matches.txt'); 
+if is_putative_match
+    img_left = im2double(rgb2gray(I1));
+    img_right = im2double(rgb2gray(I2));
+    top_pairs = get_top_pairs(img_left, img_right);
+    draw_top_pairs(img_left, top_pairs(:, 1:2));
+    draw_top_pairs(img_right, top_pairs(:, 3:4));
+    
+    matches = zeros(size(top_pairs));
+    matches(:, 1) = top_pairs(:, 2);
+    matches(:, 2) = top_pairs(:, 1);
+    matches(:, 3) = top_pairs(:, 4);
+    matches(:, 4) = top_pairs(:, 3);
+else
+    matches = load('./assignment3_part2_data/house_matches.txt');
+end
 % this is a N x 4 file where the first two numbers of each row
 % are coordinates of corners in the first image and the last two
 % are coordinates of corresponding corners in the second image: 
@@ -37,46 +51,28 @@ line([matches(:,1) matches(:,3) + size(I1,2)]', matches(:,[2 4])', 'Color', 'r')
 %% from the first image
 %%
 
+% first, fit fundamental matrix to the matches
 if is_putative_match
-    img_left = im2double(rgb2gray(I1));
-    img_right = im2double(rgb2gray(I2));
-    top_pairs = get_top_pairs(img_left, img_right);
-    % draw_top_pairs(img_left, top_pairs(:, 1:2));
-    % draw_top_pairs(img_right, top_pairs(:, 3:4));
+    F = ransac_part2(matches);
     
-    homography = ransac(top_pairs);
-    draw_inliner(img_left, img_right, top_pairs, homography);
-    
-    % T = maketform('projective', homography);
-    % draw_merged_image(img_left, img_right, T);
-    
-    [num_of_inliner, inliner_pairs] = compute_num_of_inliners(top_pairs, homography);
-    matches_for_F = inliner_pairs;
+    % Report the number of inliers and the average residual for the inliers
+    [num_inliner, inliner_pairs, avg_residual] = count_inliner_part2(matches, F);
+    display(num_inliner)
+    display(avg_residual)
+    r_left = inliner_pairs(:, 1);
+    c_left = inliner_pairs(:, 2);
+
+    figure, imagesc(img_left), axis image, colormap(gray), hold on
+    plot(r_left, c_left,'gs'), title('inliners');
 else
-    matches_for_F = matches;
+    F = fit_fundamental(matches, is_normalized);
 end
 
-% first, fit fundamental matrix to the matches
-F = fit_fundamental(matches_for_F, is_normalized); % this is a function that you should write
-L = (F * [matches(:,1:2) ones(N,1)]')'; % transform points from 
-% the first image to get epipolar lines in the second image
+L = get_epipolar_line(F, matches);
 
-% find points on epipolar lines L closest to matches(:,3:4)
-L = L ./ repmat(sqrt(L(:,1).^2 + L(:,2).^2), 1, 3); % rescale the line
-pt_line_dist = sum(L .* [matches(:,3:4) ones(N,1)],2);
-closest_pt = matches(:,3:4) - L(:,1:2) .* repmat(pt_line_dist, 1, 2);
+[closest_pt, L] = get_closest_pt(L, matches);
 
-% find endpoints of segment on epipolar line (for display purposes)
-pt1 = closest_pt - [L(:,2) -L(:,1)] * 10; % offset from the closest point is 10 pixels
-pt2 = closest_pt + [L(:,2) -L(:,1)] * 10;
-
-% display points and segments of corresponding epipolar lines
-figure; 
-clf;
-imshow(I2); hold on;
-plot(matches(:,3), matches(:,4), '+r');
-line([matches(:,3) closest_pt(:,1)]', [matches(:,4) closest_pt(:,2)]', 'Color', 'r');
-line([pt1(:,1) pt2(:,1)]', [pt1(:,2) pt2(:,2)]', 'Color', 'g');
+display_residual(closest_pt, L, matches, I2);
 
 %%
 %% Display the two camera centers and reconstructed points in 3D

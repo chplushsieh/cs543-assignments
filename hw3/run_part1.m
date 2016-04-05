@@ -21,7 +21,7 @@ top_pairs = get_top_pairs(img_left, img_right);
 draw_top_pairs(img_left, top_pairs(:, 1:2));
 draw_top_pairs(img_right, top_pairs(:, 3:4));
 
-homography = ransac(top_pairs);
+homography = ransac_part1(top_pairs);
 
 % % Solution picked by-hand
 % c2 = [577; 886; 983; 706]; % left 

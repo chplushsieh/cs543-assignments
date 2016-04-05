@@ -1,4 +1,4 @@
-function homography = ransac(top_pairs)
+function homography = ransac_part1(top_pairs)
 
 % set how many time 
 round = 1400;
@@ -10,7 +10,7 @@ while(round > 0)
     round = round-1;
     
     % randomly pick four pairs
-    four_pairs = four_random_pairs(top_pairs);
+    four_pairs = k_random_pairs(4, top_pairs);
     % display(four_pairs)
     
     r_left = four_pairs(:, 1);
@@ -25,7 +25,7 @@ while(round > 0)
         cur_homography = eye(3);
     end
     
-    [cur_inliner, ~] = compute_num_of_inliners(top_pairs, cur_homography);
+    [cur_inliner, ~, ~] = count_inliner_part1(top_pairs, cur_homography);
     
     if cur_inliner > max_inliner
         display(max_inliner)
@@ -34,20 +34,4 @@ while(round > 0)
     end
 end
 
-end
-
-function pairs = four_random_pairs(top_pairs)
-    
-    pairs = zeros(4, 4);
-    
-    for i = 1:4
-        
-        cur_pair = random_pair(top_pairs);
-        pairs(i, :) = cur_pair;
-    end
-end
-
-function pair = random_pair(top_pairs)
-    random_index = randi([1, size(top_pairs, 1)]);
-    pair = top_pairs(random_index, :);
 end

@@ -2,7 +2,7 @@ function top_pairs = putative_match(corners_distance, r_left, c_left, r_right, c
 % Select the top few hundred descriptor pairs with the smallest pairwise distances
 
 % set top matches number
-top = 200;
+top = 160;
 
 top_pairs = zeros(top, 4);
 

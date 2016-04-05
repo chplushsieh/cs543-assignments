@@ -1,7 +1,8 @@
-function [cur_inliner, inliner_pairs] = compute_num_of_inliners(top_pairs, homography)
+function [cur_inliner, inliner_pairs, avg_residual] = count_inliner_part1(top_pairs, homography)
     threshold = 10; % TODO
     
     cur_inliner = 0;
+    avg_residual = 0;
     is_inliner = false(size(top_pairs, 1), 1);
     
     for i = 1:size(top_pairs, 1)  
@@ -18,9 +19,11 @@ function [cur_inliner, inliner_pairs] = compute_num_of_inliners(top_pairs, homog
         error_distance = dist2(left_transormed, right_coordinate);
         if error_distance < (threshold^2)
             cur_inliner = cur_inliner + 1;
+            avg_residual = avg_residual + error_distance;
             is_inliner(i) = true;
         end
     end
     
     inliner_pairs = top_pairs(is_inliner == true, :);
+    avg_residual = avg_residual / cur_inliner;
 end

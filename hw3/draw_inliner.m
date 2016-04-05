@@ -1,6 +1,8 @@
 function draw_inliner(img_left, img_right, top_pairs, homography)
 
-[~, inliner_pairs] = compute_num_of_inliners(top_pairs, homography);
+[~, inliner_pairs, avg_residual] = count_inliner_part1(top_pairs, homography);
+display(avg_residual)
+
 r_left = inliner_pairs(:, 1);
 c_left = inliner_pairs(:, 2);
 
