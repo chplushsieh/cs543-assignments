@@ -40,53 +40,65 @@
    
         ```Matlab
         % For normalized estimation for house: 
-        avg_residual = 
+        avg_residual = 0.0700
         ```
         Here are the result: 
-        ![merged]
+        ![house_normalized]
+
+        [house_normalized]:https://raw.githubusercontent.com/chplushsieh/cs543-assignments/master/hw3/part2outputs/tagged/house_normalized_result.png
         ```Matlab
         % For normalized estimation for library: 
-        avg_residual = 
+        avg_residual = 0.0603
         ```
         Here are the result: 
-        ![merged]
+        ![library_normalized]
+
+        [library_normalized]:https://raw.githubusercontent.com/chplushsieh/cs543-assignments/master/hw3/part2outputs/tagged/library_normalized_result.png
         ```Matlab
         % For unnormalized estimation for house: 
-        avg_residual = 
+        avg_residual = 26.4013
         ```
         Here are the result: 
-        ![merged]
+        ![house_unnormalized]
+
+        [house_unnormalized]:https://raw.githubusercontent.com/chplushsieh/cs543-assignments/master/hw3/part2outputs/tagged/house_unnormalized_result.png
         ```Matlab
         % For unnormalized estimation for library: 
-        avg_residual = 
+        avg_residual = 0.1792
         ```
         Here are the result: 
-        ![merged]
+        ![library_unnormalized]
+
+        [library_unnormalized]:https://raw.githubusercontent.com/chplushsieh/cs543-assignments/master/hw3/part2outputs/tagged/library_unnormalized_result.png
     
    2. For both image pairs, for normalized estimation without ground truth matches, display your result and report your number of inliers and residual for inliers. 
         
         ```Matlab
         % For house without ground truth matches:
-        num_inliner = 
-        avg_residual = 
+        num_inliner = 79
+        avg_residual = 2.0457
         ```
         Here are the result: 
-        ![merged]
+        ![house_without_groundtruth]
+
+        [house_without_groundtruth]:https://raw.githubusercontent.com/chplushsieh/cs543-assignments/master/hw3/part2outputs/tagged/house_without_groundtruth_result.png
+
         ```Matlab
         % For library without ground truth matches:
         num_inliner = 127
         avg_residual = 2.3817
         ```
         Here are the result: 
-        ![merged]
+        ![library_without_groundtruth]
 
-        [merged]: https://raw.githubusercontent.com/chplushsieh/cs543-assignments/master/hw3/part2outputs/tagged/library_without_groundtruth_result.png
+        [library_without_groundtruth]:https://raw.githubusercontent.com/chplushsieh/cs543-assignments/master/hw3/part2outputs/tagged/library_without_groundtruth_result.png
+
    3. For both image pairs, visualize 3D camera centers and triangulated 3D points.
         
-        See Youtube video here for house:
+        For house, see Youtube video here:
         <https://youtu.be/YAIOC05xYas>
         
-        See Youtube video here for library:
+        For library, see Youtube video here:
         <https://youtu.be/5Ct0F5gd-S0>
 
 
