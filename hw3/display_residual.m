@@ -11,4 +11,20 @@ line([matches(:,3) closest_pt(:,1)]', [matches(:,4) closest_pt(:,2)]', 'Color', 
 line([pt1(:,1) pt2(:,1)]', [pt1(:,2) pt2(:,2)]', 'Color', 'g');
 
 saveas(c, [savedir image_name '_result.png'],'png');
+
+
+% compute and display residual
+avg_residual = 0;
+
+for i = 1:size(closest_pt, 1)
+    right_coordinate = matches(i, 3:4);
+    left_transormed = closest_pt(i, 1:2);
+
+    error_distance = dist2(left_transormed, right_coordinate);
+    avg_residual = avg_residual + error_distance;
+end
+ 
+avg_residual = avg_residual / size(closest_pt, 1);
+display(avg_residual)
+
 end

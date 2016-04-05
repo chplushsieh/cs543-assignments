@@ -8,8 +8,8 @@ if ~exist(savedir, 'dir')
     mkdir(savedir)
 end
 
-is_normalized = 1;
-is_putative_match = 1; % set to 0 to use ground truth matches
+is_normalized = 0;
+is_putative_match = 0; % set to 0 to use ground truth matches
 
 datadir = './assignment3_part2_data/';
 

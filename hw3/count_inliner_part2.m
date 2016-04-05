@@ -1,5 +1,5 @@
 function [cur_inliner, inliner_pairs, avg_residual] = count_inliner_part2(top_pairs, F)
-    threshold = 4; % TODO
+    threshold =4; % set
     
     cur_inliner = 0;
     avg_residual = 0;
